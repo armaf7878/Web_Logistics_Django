@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="text-primary" style="width: full; text-align: center;">NHẬP KHO</h1>
+    <form class="d-flex" role="search" method="post" action="/products/showall/" style="margin-bottom: 15px;">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </form>
+
+    <form method="post" action="/exports/import/">
+        {% csrf_token %}
+        <button class="btn btn-outline-primary" type="submit">Nhập</button>
+        <table class="table table-striped ">
+            <thead>
+                <tr>
+
+                <th scope="col">Số lượng</th>
+                <th scope="col">Tên sản phẩm</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                <tr>
+
+                <td style="width: 200px;">
+                    <input type="number" style="width: 100px;" name="{{p.id}}">
+                </td>
+                <td>{{p.name}}</td>
+                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

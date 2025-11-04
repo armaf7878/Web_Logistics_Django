@@ -1,0 +1,11 @@
+<form method="POST">
+  {% csrf_token %}
+  <h2>Đăng nhập</h2>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="password" name="password" placeholder="Mật khẩu" required>
+  <button type="submit">Đăng nhập</button>
+  
+    {% for message in messages %}
+      <p style="color:red">{{ message }}</p>
+    {% endfor %}
+</form>

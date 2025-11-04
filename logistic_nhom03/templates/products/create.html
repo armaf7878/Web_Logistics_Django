@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="text-primary" style="width: 100%; text-align: center;">Tạo Sản Phẩm Mới</h1>
+   
+    <form class="row g-3" action="/products/create/" method="post" style="padding: 50px;">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label class="form-label">Tên sản phẩm</label>
+            <input type="text" class="form-control" name="name" value="{{product.name}}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Nhà cung cấp</label>
+            <input type="text" class="form-control" name="supplier" value="{{product.supplier}}">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Số lượng</label>
+            <input type="number" class="form-control" name="quantity" value="{{product.quantity}}">
+        </div>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">Danh mục hàng</label>
+            <select id="inputState" class="form-select" name="category">
+                <option selected>{{product.category}}</option>
+                <option>Thực phẩm</option>
+                <option>Đồ uống</option>
+                <option>Nông sản</option>
+                <option>Hóa phẩm</option>
+                <option>Dược phẩm</option>
+                <option>Cháy nổ</option>
+                <option>Điện cơ</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">Đơn vị</label>
+            <select id="inputState" class="form-select" name="unit">
+                <option selected>{{product.unit}}</option>
+                <option>Chai</option>
+                <option>Bình</option>
+                <option>Phần</option>
+                <option>Hộp</option>
+                <option>Bao</option>
+                <option>Thùng</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">Kho hàng</label>
+            <select id="inputState" class="form-select" name="warehouse_location">
+                <option selected>{{product.warehouse_location}}</option>
+                <option>A1-B1</option>
+                <option>A1-B2</option>
+                <option>A1-B3</option>
+                <option>A2-B1</option>
+                <option>A2-B2</option>
+                <option>A3-B1</option>
+                <option>A4-B1</option>
+                <option>A4-B2</option>
+                <option>A4-B3</option>
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Tạo Mới</button>
+        </div>
+    </form>
+{% endblock %}

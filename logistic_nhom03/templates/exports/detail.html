@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content%}
+    <h1 class="text-primary" style="width: 100%; text-align: center;">Chi tiết đơn hàng</h1>
+   
+    <form class="row g-3"  style="padding: 50px;">
+        {% csrf_token %}
+        <div class="col-md-4">
+            <label class="form-label">Tên khách hàng</label>
+            <input type="text" class="form-control" name="name" value="{{export.customer_name}}"disabled >
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Số điện thoại khách hàng</label>
+            <input type="text" class="form-control" name="supplier" value="{{export.customer_phone}}"disabled >
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Địa chỉ giao hàng</label>
+            <input type="text" class="form-control" name="quantity" value="{{export.address}}"disabled >
+        </div>
+        
+        <div class="col-md-4">
+            <label class="form-label">Tài xế</label>
+            <input type="text" class="form-control" name="supplier" value="{{export.assigned_to}}"disabled  >
+        </div>
+        
+        <div class="col-md-4">
+            <label class="form-label">Hạn giao hàng</label>
+            <input type="text" class="form-control" name="supplier" value="{{export.delivered_at}}" disabled >
+        </div>
+        
+
+        <div class="col-md-4">
+            <label class="form-label">Trạng thái</label>
+            <input type="text" class="form-control" name="supplier" value="{{export.status}}" disabled >
+        </div>
+        
+
+        <div class="col-md-4">
+            <label class="form-label">Được tạo bởi</label>
+            <input type="text" class="form-control" name="supplier" value="{{export.created_by}}" disabled >
+        </div>
+        
+        <div class="col-md-4">
+            <label class="form-label">Ngày tạo phiếu</label>
+            <input type="text" class="form-control" name="supplier" value="{{export.created_at}}" disabled >
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Sản phẩm</label>
+            <textarea disabled type="text" class="form-control" name="supplier" disabled >{{export.products}}</textarea>
+        </div>
+        <div class="col-12">
+            <a href="/trackings/{{export.id}}/"  class="btn btn-primary"  >Xem tình trạng nhận hàng</a>
+        </div>
+    </form>
+{% endblock%}   

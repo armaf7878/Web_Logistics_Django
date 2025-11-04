@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="text-priamary" style="width: full; text-align: center;">DANH SÁCH XUẤT KHO</h1>
+    <form class="d-flex align-items-center" role="search" method="post" action="/products/showall/" style="margin-bottom: 15px;">
+      {% csrf_token %}
+      <input class="form-control me-2" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
+      <div class="form-check form-switch me-2" style="width: 200px;">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+        <label class="form-check-label" for="switchCheckDefault">Lọc trễ hạn giao</label>
+      </div>
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+      
+    </form>
+    <a href="/products/create/" class="btn btn btn-outline-secondary d-flex justify-content-center">Tạo Mới Sản Phẩm</a>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Mã đơn hàng</th>
+          <th scope="col">Tài xế</th>
+          <th scope="col">Tên khách hàng</th>
+          <th scope="col">Trạng thái</th>
+          <th scope="col">Quá hạn</th>
+          <th scope="col">Hạn giao</th>
+          <th scope="col"></th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in exports %}
+        <tr>
+          <td>{{e.id}}</td>
+          <td>{{e.assigned_to}}</td>
+          <td>{{e.customer_name}}</td>
+          <td>{{e.status}}</td>
+          <td>{{e.deadline}}</td>
+          <td>{{e.delivered_at}}</td>
+          <td>
+            <a href="/exports/detail/{{e.id}}/" class="btn btn-primary">Chi tiết phiếu xuất</a>
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+{% endblock %}

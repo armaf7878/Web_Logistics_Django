@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div id="map"     
+    data-lat = "{{tracking.current_latitude}}"
+    data-lon= "{{tracking.current_longitude}}"> 
+  </div>
+
+  <script>
+      const map_div = document.getElementById('map')
+      console.log((map_div.dataset.lat));
+      console.log((map_div.dataset.lon))
+      des = [parseFloat(map_div.dataset.lat.replace(",", ".")), parseFloat(map_div.dataset.lon.replace(",", "."))];
+      warehouse = [10.774272, 106.700138];
+      const lat = parseFloat(map_div.dataset.lat.replace(",", "."));
+      const lon = parseFloat(map_div.dataset.lon.replace(",", "."));
+      const map = L.map('map').setView([lat, lon], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([lat, lon]).addTo(map).bindPopup("Đích đến");;
+      L.marker([10.774272, 106.700138]).addTo(map).bindPopup("Kho hàng")
+      const url = `https://router.project-osrm.org/route/v1/driving/${warehouse[1]},${warehouse[0]};${des[1]},${des[0]}?overview=full&geometries=geojson`;
+      fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const route = data.routes[0].geometry;
+        const routeLine = L.geoJSON(route, {color: 'blue', weight: 5}).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+      })
+      .catch(err => console.error("Lỗi lấy route:", err));
+     
+  </script>
+{% endblock %}

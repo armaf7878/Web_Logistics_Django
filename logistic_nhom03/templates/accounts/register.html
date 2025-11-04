@@ -1,0 +1,20 @@
+<form method="POST" action="{% url 'register' %}">
+    {% csrf_token %}
+    <label>Họ và tên:</label><br>
+    <input type="text" name="name" required><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br>
+
+    <label>Mật khẩu:</label><br>
+    <input type="password" name="password" required><br>
+
+    <label>Số điện thoại:</label><br>
+    <input type="text" name="phone"><br>
+
+    <button type="submit">Đăng ký</button>
+
+    {% for message in messages %}
+      <p style="color:red">{{ message }}</p>
+    {% endfor %}
+</form>
