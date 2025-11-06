@@ -5,5 +5,4 @@ class ExportsForm(forms.Form):
     customer_name = forms.CharField(max_length=100)
     customer_phone = forms.CharField(max_length=100)
     address = forms.CharField(max_length=100)
-    assigned_to = forms.CharField(max_length=50)
-    delivered_at = forms.DateTimeField(label ="delivered_at")
+    pickup_time = forms.DateTimeField(label ="pickup_time")

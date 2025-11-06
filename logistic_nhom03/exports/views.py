@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from .models import ExportsForm
 from datetime import datetime
+from datetime import timedelta
 # Create your views here.
 db = settings.firestore_db
 
@@ -17,9 +18,9 @@ def showall(request):
         exports = []
         for doc in exports_ref:
             item = doc.to_dict()
-            item['deadline'] = 'Còn hạn giao'
-            if timezone.now() > item.get('delivered_at'):
-                item['deadline'] = 'Trễ hạn giao'
+            item['deadline'] = 'Còn hạn lấy'
+            if timezone.now() > item.get('pickup_time'):
+                item['deadline'] = 'Trễ hạn lấy'
             item['id'] = doc.id
             exports.append(item)
         
@@ -39,10 +40,40 @@ def create(request):
             data = form.cleaned_data
             data['status'] = 'pending'
             data['created_at'] = timezone.now().isoformat() 
-            data['delivered_at'] = data.get('delivered_at').isoformat()
             data['created_by'] = request.session['firebase_user'].get('displayName')
-            print(data['delivered_at'])
+            data['pickup_time'] = data.get('pickup_time').isoformat()
+            print(type(data.get('pickup_time')))
+            print(data['pickup_time'])
             request.session['craft_export'] = data
+            deliver_ref = db.collection('users').get()
+            deliver_list = []
+            for doc in deliver_ref:
+                user = doc.to_dict()
+                if user.get('role') == 'deliver':
+                    deliver_list.append(doc.id)
+                print("danh sách ban đầu" + str(deliver_list))
+            if len(deliver_list) > 0:
+                exports_ref = db.collection('exports').get()
+                for export in exports_ref:
+                    item = export.to_dict()
+                    
+                    for deliverID in deliver_list:
+                        if item.get('assigned_to') == deliverID:
+                            deliver_list.remove(deliverID)
+                    print("============================") 
+                    print("danh sách lọc" + str(deliver_list)) 
+                    diff =(item.get('pickup_time') - datetime.fromisoformat(data.get('pickup_time')))
+                    print(str(diff))
+                    if abs(diff) > timedelta(days=7) :
+                        deliver_list.append(item.get('assigned_to'))
+                    print("============================") 
+                    print("danh sách thêm" + str(deliver_list))
+            deliver_list_name = []
+            for deliver in deliver_list:
+                doc_ref = db.collection('users').document(deliver).get()
+                item = doc_ref.to_dict()
+                item['id'] = doc_ref.id
+                deliver_list_name.append(item)
             product_ref = db.collection('products').get()
             products = []
             for doc in product_ref:
@@ -50,10 +81,11 @@ def create(request):
                 item['id'] = doc.id
                 products.append(item)
             context = {
-                'products': products
+                'products': products,
+                'deliver': deliver_list_name
             }
             return render(request, 'exports/chooseproducts.html', context)
-        print(form)
+
         return JsonResponse({'test': 'không tồn tại form ok'})
 
     else:
@@ -75,8 +107,9 @@ def chooseproduct(request):
                 id_list.append(id)
         export = request.session['craft_export']
         export['products'] = quantity_list
-        export['delivered_at'] = datetime.fromisoformat(export.get('delivered_at'))
         export['created_at'] = datetime.fromisoformat(export.get('created_at'))
+        export['pickup_time'] = datetime.fromisoformat(export.get('pickup_time'))
+        export['assigned_to'] = request.POST.get('assigned_to')
         try:
             for id in id_list:
                 print(id)
@@ -97,7 +130,7 @@ def chooseproduct(request):
                         return JsonResponse({'err': "Cứu t với bây ơi lỗi cập nhật số lượng product"})
                 else:
                     return JsonResponse({'err': "Số lượng xuất phai bé hơn nghe chưa"})
-             
+            
             db.collection('exports').add(export)
             del request.session['craft_export'] 
             messages.success(request, "Lụm gạo")
