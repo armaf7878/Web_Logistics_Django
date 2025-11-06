@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'logistic_nhom03.wsgi.application'
 
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("logistic-nhom03-firebase-adminsdk-fbsvc-ebe39c7e97.json")
+    cred = credentials.Certificate("logistic-nhom03-firebase-adminsdk-fbsvc-f2b5d5e916.json")
     firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://logistic-nhom03-default-rtdb.firebaseio.com'
     })
