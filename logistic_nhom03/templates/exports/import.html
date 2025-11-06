@@ -1,35 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1 class="text-primary" style="width: full; text-align: center;">NHẬP KHO</h1>
-    <form class="d-flex" role="search" method="post" action="/products/showall/" style="margin-bottom: 15px;">
-      {% csrf_token %}
-      <input class="form-control me-2" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-    </form>
+  <div class="page-header">
+    <div>
+      <div class="title">Nhập kho</div>
+      <div class="subtitle">Chọn sản phẩm và số lượng để nhập kho</div>
+    </div>
+  </div>
 
-    <form method="post" action="/exports/import/">
+  <div class="card-panel">
+    <div class="card-body">
+      <form class="toolbar" role="search" method="post" action="/products/showall/">
         {% csrf_token %}
-        <button class="btn btn-outline-primary" type="submit">Nhập</button>
-        <table class="table table-striped ">
-            <thead>
-                <tr>
+        <input class="form-control" style="max-width:320px" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
+        <button class="btn btn-ghost" type="submit">Tìm kiếm</button>
+      </form>
+    </div>
+  </div>
 
-                <th scope="col">Số lượng</th>
-                <th scope="col">Tên sản phẩm</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in products %}
-                <tr>
-
-                <td style="width: 200px;">
-                    <input type="number" style="width: 100px;" name="{{p.id}}">
-                </td>
-                <td>{{p.name}}</td>
-                
-                </tr>
-                {% endfor %}
-            </tbody>
+  <div class="mt-16 card-panel">
+    <div class="card-body">
+      <form method="post" action="/exports/import/">
+        {% csrf_token %}
+        <div class="mb-16 text-right">
+          <button class="btn btn-brand" type="submit">Nhập</button>
+        </div>
+        <table class="table table-pro mb-0">
+          <thead>
+            <tr>
+              <th scope="col" style="width:220px">Số lượng</th>
+              <th scope="col">Tên sản phẩm</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in products %}
+            <tr>
+              <td>
+                <input type="number" class="form-control" style="max-width:140px" name="{{p.id}}">
+              </td>
+              <td>{{p.name}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
-    </form>
+      </form>
+    </div>
+  </div>
 {% endblock %}
+

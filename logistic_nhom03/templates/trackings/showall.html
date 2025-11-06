@@ -1,34 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1 class="text-primary" style="width: full; text-align: center;">THEO DÕI VỊ TRÍ ĐƠN HÀNG</h1>
-    <form class="d-flex" role="search" method="post" action="/products/showall/" style="margin-bottom: 15px;">
-      {% csrf_token %}
-      <input class="form-control me-2" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-    </form>
-    <a href="/products/create/" class="btn btn btn-outline-secondary d-flex justify-content-center">Tạo Mới Sản Phẩm</a>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">ID đơn hàng</th>
-          <th scope="col">Vị trí xe hiện tại</th>
-          <th scope="col">Người vận chuyển</th>
-          <th scope="col">Cập nhật cuối</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for t in tracking %}
-        <tr style="align-items: center;">
-          <td>{{t.id}}</td>
-          <td style="width: 200px;">{{t.displayName}}</td>
-          <td>{{t.deliver_id}}</td>
-          <td>{{t.last_update}}</td>
-          <td>
-            <a href="/trackings/{{t.id}}/" class="btn btn-primary">Chi tiết</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="page-header">
+    <div>
+      <div class="title">Theo dõi vị trí đơn hàng</div>
+      <div class="subtitle">Danh sách đơn và vị trí hiện tại</div>
+    </div>
+  </div>
 
+  <div class="card-panel">
+    <div class="card-body">
+      <form class="toolbar" role="search" method="post" action="/products/showall/">
+        {% csrf_token %}
+        <input class="form-control" style="max-width:320px" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
+        <button class="btn btn-ghost" type="submit">Tìm kiếm</button>
+        <a href="/products/create/" class="btn btn-brand">Tạo mới sản phẩm</a>
+      </form>
+    </div>
+  </div>
+
+  <div class="mt-16 card-panel">
+    <div class="card-body p-0">
+      <table class="table table-pro mb-0">
+        <thead>
+          <tr>
+            <th scope="col">ID đơn hàng</th>
+            <th scope="col">Vị trí xe hiện tại</th>
+            <th scope="col">Người vận chuyển</th>
+            <th scope="col">Cập nhật cuối</th>
+            <th scope="col" class="text-right">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tracking %}
+          <tr>
+            <td>{{t.id}}</td>
+            <td>{{t.displayName}}</td>
+            <td>{{t.deliver_id}}</td>
+            <td>{{t.last_update}}</td>
+            <td class="text-right">
+              <a href="/trackings/{{t.id}}/" class="btn btn-sm btn-brand">Chi tiết</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock %}
+

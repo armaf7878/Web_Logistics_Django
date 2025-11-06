@@ -1,22 +1,31 @@
 {% extends 'base_deliver.html' %}
 {% block content %}
+  <div class="page-header">
+    <div>
+      <div class="title">Đơn chờ nhận</div>
+      <div class="subtitle">Danh sách đơn giao dành cho tài xế</div>
+    </div>
+  </div>
 
-<div class="row g-3">
-    
-        <div class="card border-primary mb-3">
-            <div class="card-header">{{export.id}}</div>
-            <div class="card-body text-primary">
-                {% if not export.valid %}
-                <h5 class="card-title">{{export.address}}</h5>
-                <p class="card-text text-danger">Hạn giao: {{export.delivered_at}}</p>
-                <p class="card-text">Sản phẩm: {{export.products}}</p>
-                <a href="/deliver/processing/{{export.id}}/" class="card-text btn btn-primary">Đã lấy hàng</a>
-                {% else%}
+  <div class="card-panel">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="card-panel">
+            <div class="card-header">Mã đơn: {{export.id}}</div>
+            <div class="card-body">
+              {% if not export.valid %}
+                <div class="mb-16"><strong>Địa chỉ:</strong> {{export.address}}</div>
+                <div class="mb-16"><span class="chip warn">Hạn giao: {{export.delivered_at}}</span></div>
+                <div class="mb-16"><strong>Sản phẩm:</strong> {{export.products}}</div>
+                <a href="/deliver/processing/{{export.id}}/" class="btn btn-brand">Đã lấy hàng</a>
+              {% else %}
                 <h5 class="card-title">{{export.valid}}</h5>
-                {% endif %}
+              {% endif %}
             </div>
+          </div>
         </div>
-
-</div>
-
+      </div>
+    </div>
+  </div>
 {% endblock%}

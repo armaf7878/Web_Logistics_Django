@@ -1,47 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1 class="text-primary" style="width: 100%; text-align: center;">Tạo Phiếu Xuất Kho</h1>
-   
-    <form class="row g-3" action="/exports/create/" method="post" style="padding: 50px;">
+  <div class="page-header">
+    <div>
+      <div class="title">Tạo phiếu xuất kho</div>
+      <div class="subtitle">Thông tin khách hàng, tài xế và hạn giao hàng</div>
+    </div>
+  </div>
+
+  <div class="card-panel">
+    <div class="card-body">
+      <form class="row g-3" action="/exports/create/" method="post">
         {% csrf_token %}
         <div class="col-md-4">
-            <label class="form-label">Tên khách hàng</label>
-            <input type="text" class="form-control" name="customer_name" >
+          <label class="form-label">Tên khách hàng</label>
+          <input type="text" class="form-control" name="customer_name">
         </div>
         <div class="col-md-4">
-            <label class="form-label">Số điện thoại khách hàng</label>
-            <input type="text" class="form-control" name="customer_phone" >
+          <label class="form-label">Số điện thoại khách hàng</label>
+          <input type="text" class="form-control" name="customer_phone">
         </div>
         <div class="col-md-4">
-            <label class="form-label">Địa chị giao hàng</label>
-            <input type="text" class="form-control" name="address">
+          <label class="form-label">Địa chỉ giao hàng</label>
+          <input type="text" class="form-control" name="address">
         </div>
 
         <div class="col-md-4">
-            <label for="inputState" class="form-label">Tài xế khả dụng</label>
-            <select id="inputState" class="form-select" name="assigned_to">
-                <option selected>Shipper 1</option>
-                <option>Thực phẩm</option>
-                <option>Đồ uống</option>
-                <option>Nông sản</option>
-                <option>Hóa phẩm</option>
-                <option>Dược phẩm</option>
-                <option>Cháy nổ</option>
-                <option>Điện cơ</option>
-            </select>
+          <label for="inputAssigned" class="form-label">Tài xế</label>
+          <select id="inputAssigned" class="form-select" name="assigned_to">
+            <option selected>Shipper 1</option>
+            <option>Shipper 2</option>
+            <option>Shipper 3</option>
+          </select>
         </div>
-        
+
         <div class="col-md-4">
-            <label class="form-label">Hạn giao hàng</label>
-            <input type="datetime-local" class="form-control" name="delivered_at">
+          <label class="form-label">Hạn giao hàng</label>
+          <input type="datetime-local" class="form-control" name="delivered_at">
         </div>
-        
-        <div class="col-md-4">
-           
+
+        <div class="col-12 text-right">
+          <button type="submit" class="btn btn-brand">Tiếp tục</button>
         </div>
-        
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Tiếp tục</button>
-        </div>
-    </form>
+      </form>
+    </div>
+  </div>
 {% endblock %}
+

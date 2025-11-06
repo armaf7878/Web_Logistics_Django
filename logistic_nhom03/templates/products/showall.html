@@ -1,44 +1,57 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1 class="text-primary" style="width: full; text-align: center;">TẤT CẢ SẢN PHẨM</h1>
-    <form class="d-flex" role="search" method="post" action="/products/showall/" style="margin-bottom: 15px;">
-      {% csrf_token %}
-      <input class="form-control me-2" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-    </form>
-    <a href="/products/create/" class="btn btn btn-outline-secondary d-flex justify-content-center">Tạo Mới Sản Phẩm</a>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Ngày Nhập</th>
-          <th scope="col">Tên sản phẩm</th>
-          <th scope="col">Số lượng</th>
-          <th scope="col">Đơn vị</th>
-          <th scope="col">Cập nhật bởi</th>
-          <th scope="col">Vị trí kho</th>
-          <th scope="col">Sửa</th>
-          <th scope="col">Xóa</th>
+  <div class="page-header">
+    <div>
+      <div class="title">Tất cả sản phẩm</div>
+      <div class="subtitle">Danh sách và tìm kiếm sản phẩm trong kho</div>
+    </div>
+    <div>
+      <a href="/products/create/" class="btn btn-brand">Tạo mới sản phẩm</a>
+    </div>
+  </div>
 
-        </tr>
-      </thead>
-      <tbody>
-        {% for p in products %}
-        <tr>
-          <td>{{p.import_date}}</td>
-          <td>{{p.name}}</td>
-          <td>{{p.quantity}}</td>
-          <td>{{p.unit}}</td>
-          <td>{{p.update_by}}</td>
-          <td>{{p.warehouse_location}}</td>
-          <td>
-            <a href="/products/update/{{p.id}}" class="btn btn-primary">Sửa</a>
-          </td>
-          <td>
-            <a href="/products/delete/{{p.id}}" class="btn btn-danger">Xóa</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="card-panel">
+    <div class="card-body">
+      <form class="toolbar" role="search" method="post" action="/products/showall/">
+        {% csrf_token %}
+        <input class="form-control" style="max-width:320px" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
+        <button class="btn btn-ghost" type="submit">Tìm kiếm</button>
+      </form>
+    </div>
+  </div>
 
+  <div class="mt-16 card-panel">
+    <div class="card-body p-0">
+      <table class="table table-pro mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Ngày nhập</th>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Đơn vị</th>
+            <th scope="col">Cập nhật bởi</th>
+            <th scope="col">Vị trí kho</th>
+            <th scope="col" class="text-right">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td>{{p.import_date}}</td>
+            <td>{{p.name}}</td>
+            <td>{{p.quantity}}</td>
+            <td>{{p.unit}}</td>
+            <td>{{p.update_by}}</td>
+            <td>{{p.warehouse_location}}</td>
+            <td class="text-right">
+              <a href="/products/update/{{p.id}}" class="btn btn-sm btn-brand">Sửa</a>
+              <a href="/products/delete/{{p.id}}" class="btn btn-sm btn-danger">Xóa</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock %}
+

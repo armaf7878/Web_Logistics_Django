@@ -1,0 +1,71 @@
+/* Global logistics theme */
+:root{
+  --brand:#0a2540; /* navy */
+  --accent:#2bb673; /* green */
+  --accent-2:#1d9f75;
+  --text:#0f172a;
+  --muted:#64748b;
+  --card:#ffffff;
+  --line:#e2e8f0;
+  --bg:#f6f8fb;
+}
+
+html,body{height:100%}
+body{background:var(--bg); color:var(--text)}
+
+/* Navbar */
+.navbar-logi{background:var(--brand)!important}
+.navbar-logi .navbar-brand,.navbar-logi .nav-link,.navbar-logi .dropdown-item{color:#000000!important}
+.navbar-logi .nav-link.active{color:#000000!important}
+.navbar-logi .dropdown-menu{border:1px solid var(--line)}
+.navbar-logi .dropdown-item:hover{background:#0f2e52;color:#000000}
+
+/* Page header */
+.page-header{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin:8px 0 18px}
+.page-header .title{font-size:22px; font-weight:800; color:var(--brand)}
+.page-header .subtitle{color:var(--muted); font-size:14px}
+
+/* Cards */
+.card-panel{background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 6px 18px rgba(16,24,40,.06)}
+.card-panel .card-body{padding:18px}
+.card-panel .card-header{padding:14px 18px; border-bottom:1px solid var(--line); font-weight:700}
+
+/* Toolbar */
+.toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+
+/* Forms */
+.form-label{font-size:13px; color:var(--muted)}
+.form-control:focus{border-color:var(--accent); box-shadow:0 0 0 .25rem rgba(43,182,115,.15)}
+.form-select:focus{border-color:var(--accent); box-shadow:0 0 0 .25rem rgba(43,182,115,.15)}
+
+/* Buttons */
+.btn-brand{background:var(--accent); color:#fff; border-color:var(--accent)}
+.btn-brand:hover{background:var(--accent-2); border-color:var(--accent-2)}
+.btn-ghost{background:#fff; border:1px solid var(--line); color:var(--brand)}
+.btn-ghost:hover{border-color:#cbd5e1}
+
+/* Tables */
+.table-pro{--bs-table-bg: #fff; --bs-table-striped-bg:#f9fafb; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.table-pro thead th{background:#eef2f7; color:var(--brand); font-weight:700; border-bottom:1px solid var(--line)}
+.table-pro tbody tr:hover{background:#f7fbf9}
+
+/* Chips / badges */
+.chip{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--brand); font-size:12px}
+.chip.success{border-color:#86efac; background:#f0fdf4; color:#166534}
+.chip.warn{border-color:#fde68a; background:#fffbeb; color:#92400e}
+.chip.danger{border-color:#fecaca; background:#fff5f5; color:#b42318}
+
+/* Dashboard hero overlay */
+.dashboard-hero{position:relative; z-index:0}
+.dashboard-hero .overlay{position:relative; z-index:1; display:flex; align-items:center; padding:60px 0}
+.dashboard-hero .overlay .hero-card{max-width:720px; background:rgba(255,255,255,.8); border:1px solid var(--line); border-radius:16px; backdrop-filter: blur(6px); box-shadow:0 12px 30px rgba(16,24,40,.15)}
+.dashboard-hero .overlay .hero-card .card-body{padding:22px}
+.dashboard-hero .hero-title{font-size:28px; font-weight:800; color:var(--brand); margin:0 0 8px}
+.dashboard-hero .hero-sub{color:var(--muted)}
+
+/* Utilities */
+.mb-16{margin-bottom:16px}
+.mt-16{margin-top:16px}
+.w-100{width:100%}
+.text-right{text-align:right}
+.text-muted{color:var(--muted)}

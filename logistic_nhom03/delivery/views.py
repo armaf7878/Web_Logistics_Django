@@ -10,13 +10,16 @@ import requests
 db = settings.firestore_db
 def showall(request):
     deliver_id = request.session['firebase_user'].get('localId')
+    print(deliver_id)
     docs_ref = db.collection('exports').get()
     export = {}
     product_list = {}
     for doc in docs_ref:
         item = doc.to_dict()
-        if item.get('assigned_to') == deliver_id and item.get('status') == 'status':
-            export = item
+        print(item.get('status'))
+        print(item.get('assigned_to'))
+        if item.get('assigned_to') == deliver_id and item.get('status') == 'pending':
+            export = item   
             export['id'] = doc.id
             for product_id in export['products']:
                 product_name = db.collection('products').document(product_id).get().to_dict().get('name')
