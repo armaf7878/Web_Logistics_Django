@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'logistic_nhom03.wsgi.application'
 
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("logistic-nhom03-firebase-adminsdk-fbsvc-dd504b74f2.json")
+    cred = credentials.Certificate("logistic-nhom03-firebase-adminsdk-fbsvc-77d8376c9b.json")
     firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://logistic-nhom03-default-rtdb.firebaseio.com'
     })
@@ -88,7 +88,7 @@ firestore_db = firestore.client()
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # ✅ bắt buộc có ENGINE
+        'ENGINE': 'django.db.backends.sqlite3',  
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }

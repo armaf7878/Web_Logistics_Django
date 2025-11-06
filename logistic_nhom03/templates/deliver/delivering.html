@@ -1,0 +1,106 @@
+{% extends 'base_deliver.html '%}
+{% block content %}
+{% load static %}
+  <div class="page-header">
+    <div>
+      <div class="title">Đơn đang tiếp nhận</div>
+      <div class="subtitle">Cập nhật trạng thái và lộ trình </div>
+    </div>
+  </div>
+  <div class="card-panel">
+    <div class="card-body">
+      <div id="map" 
+           data-warehouse_lat="{{ware_house_lat}}" 
+           data-warehouse_lon="{{ware_house_lon}}"
+           data-destination_lat="{{destination_lat}}" 
+           data-destination_lon="{{destination_lon}}"
+           data-deliver_id = "{{deliver_id}}"
+           data-current_deliver_lat="{{current_deliver_lat}}"
+           data-current_deliver_lon="{{current_deliver_lon}}"></div>
+      </div>
+      <div id="icon" data-icon_warehouse ="{% static 'icon_warehouse.webp' %}" data-icon_truck ="{% static 'icon_truck.png' %}">
+        
+      </div>
+
+      <form method="post" action="/deliver/delivering/complete/">
+        {% csrf_token %}
+        <label>Mã đơn hàng</label>
+        <input type="text" class="form-control" value="{{export_id}}" name="export_id" readonly>
+        <label>Mã tài xế</label>
+        <input type="text" class="form-control" value="{{deliver_id}}" name="deliver_id" readonly>
+        <button type="submit" class="btn btn-outline-secondary">Giao hàng thành công</button>
+      </form>
+  </div>
+
+  <script>
+    const map_div = document.getElementById('map');
+    const icon_div = document.getElementById('icon');
+    const icon_warehouse = icon_div.dataset.icon_warehouse;
+    const icon_truck = icon_div.dataset.icon_truck;
+    const deliverID = map_div.dataset.deliver_id
+    destination_geo = [parseFloat(map_div.dataset.destination_lat.replace(",", ".")), parseFloat(map_div.dataset.destination_lon.replace(",", "."))];
+    warehouse_geo = [parseFloat(map_div.dataset.warehouse_lat.replace(",", ".")), parseFloat(map_div.dataset.warehouse_lon.replace(",", "."))];
+    currentDeliver_geo = [parseFloat(map_div.dataset.current_deliver_lat.replace(",", ".")), parseFloat(map_div.dataset.current_deliver_lon.replace(",", "."))];
+    var warehouseIcon = L.icon({
+        iconUrl: icon_warehouse,
+        iconSize: [38, 75],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76],
+    });
+
+    var truckIcon = L.icon({
+        iconUrl: icon_truck,
+        iconSize: [38, 75],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76],
+    });
+    
+    const map = L.map('map').setView(destination_geo, 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker(warehouse_geo, {icon: warehouseIcon}).addTo(map).bindPopup("Kho hàng");
+    L.marker(currentDeliver_geo, {icon: truckIcon}).addTo(map).bindPopup("Xe hàng");
+    L.marker(destination_geo).addTo(map).bindPopup("Đích đến");
+    const url = `https://router.project-osrm.org/route/v1/driving/${warehouse_geo[1]},${warehouse_geo[0]};${destination_geo[1]},${destination_geo[0]}?overview=full&geometries=geojson`;
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const route = data.routes[0].geometry;
+        const routeLine = L.geoJSON(route, {color: 'blue', weight: 5}).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+      })
+      .catch(err => console.error("Lỗi lấy route:", err));
+
+    function sendLocation(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      console.log("Current location:", lat, lon);
+
+      fetch("http://127.0.0.1:8000/deliver/update_location/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+          deliver_id: deliverID,
+          latitude: lat,
+          longitude: lon
+        })
+      });
+    }
+    function error(err) {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(sendLocation, error, {
+        enableHighAccuracy: true,
+        maximumAge: 10000, 
+        timeout: 5000
+      });
+    } else {
+      alert("Trình duyệt không hỗ trợ định vị GPS");
+    }
+  </script>
+{% endblock%}

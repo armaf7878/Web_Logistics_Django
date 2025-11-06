@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Container -->
+  <div class="container mt-4">
+    <div class="card p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Danh sách tài khoản</h4>
+        <form class="d-flex" method="get">
+          <input class="form-control me-2" type="search" placeholder="Tìm theo email hoặc tên..." name="q">
+          <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Email</th>
+              <th scope="col">Số điện thoại</th>
+              <th scope="col">Vai trò</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col">Ngày tạo</th>
+              <th scope="col" class="text-end">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone|default:"—" }}</td>
+              <td>
+                {% if user.role == 'admin' %}
+                  <span class="badge bg-primary">Admin</span>
+                {% elif user.role == 'deliver' %}
+                  <span class="badge bg-warning text-dark">Tài xế</span>
+                {% elif user.role == 'staff' %}
+                  <span class="badge bg-info text-dark ">Nhân viên</span>
+                {% else %}
+                  <span class="badge text-bg-primary">Khác</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if user.active %}
+                  <span class="badge text-bg-primary">Hoạt động</span>
+                {% else %}
+                  <span class="badge badge-inactive">Vô hiệu</span>
+                {% endif %}
+              </td>
+              <td>{{ user.created_at|date:"d/m/Y H:i" }}</td>
+              <td class="text-end">
+                <a href="/accounts/update/{{ user.id }}/" class="btn btn-sm btn-outline-success">Sửa</a>
+                <form action="/accounts/delete/{{ user.id }}/" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xoá tài khoản này?')">Xoá</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-3">Không có tài khoản nào trong hệ thống.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

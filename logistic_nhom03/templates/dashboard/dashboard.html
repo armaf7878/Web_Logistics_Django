@@ -16,6 +16,9 @@
               <a class="btn btn-brand" href="/products/showall">Xem sản phẩm</a>
               <a class="btn btn-ghost" href="/exports/showall/">Đơn xuất kho</a>
               <a class="btn btn-ghost" href="/trackings/">Theo dõi đơn hàng</a>
+              {% if role == 'admin' %} 
+              <a class="btn btn-ghost" href="/accounts/showall/">Quản lý người dùng</a>
+              {% endif %}
             </div>
           </div>
         </div>

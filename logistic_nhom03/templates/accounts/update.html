@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm p-4">
+    <h4 class="mb-3 fw-semibold">Cập nhật thông tin tài khoản</h4>
+    <form method="POST" action="/accounts/update/{{ user.id }}/">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-medium">Email</label>
+        <input type="email" class="form-control" id="email" name="email"
+               value="{{ user.email }}" placeholder="example@email.com" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label fw-medium">Số điện thoại</label>
+        <input type="text" class="form-control" id="phone" name="phone"
+               value="{{ user.phone }}" placeholder="Nhập số điện thoại">
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label fw-medium">Vai trò</label>
+        <select class="form-select" id="role" name="role" required>
+          <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Quản trị viên</option>
+          <option value="staff" {% if user.role == 'staff' %}selected{% endif %}>Nhân viên kho</option>
+          <option value="deliver" {% if user.role == 'deliver' %}selected{% endif %}>Tài xế giao hàng</option>
+          <option value="customer" {% if user.role == 'customer' %}selected{% endif %}>Khách hàng</option>
+        </select>
+      </div>
+
+      <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" role="switch" id="active"
+               name="active" {% if user.active %}checked{% endif %}>
+        <label class="form-check-label" for="active">Tài khoản đang hoạt động</label>
+      </div>
+
+
+      <div class="mb-3">
+        <label for="created_at" class="form-label fw-medium">Ngày tạo</label>
+        <input type="text" class="form-control" id="created_at"
+               value="{{ user.created_at|date:'d/m/Y H:i' }}" readonly>
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <a href="/accounts/showall/" class="btn btn-outline-secondary me-2">Hủy</a>
+        <button type="submit" class="btn btn-primary px-4" onclick="return confirm('Xác nhận thay đổi thông tin')"> Lưu thay đổi</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
