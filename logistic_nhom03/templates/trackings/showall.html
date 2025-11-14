@@ -7,16 +7,7 @@
     </div>
   </div>
 
-  <div class="card-panel">
-    <div class="card-body">
-      <form class="toolbar" role="search" method="post" action="/products/showall/">
-        {% csrf_token %}
-        <input class="form-control" style="max-width:320px" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
-        <button class="btn btn-ghost" type="submit">Tìm kiếm</button>
-        <a href="/products/create/" class="btn btn-brand">Tạo mới sản phẩm</a>
-      </form>
-    </div>
-  </div>
+
 
   <div class="mt-16 card-panel">
     <div class="card-body p-0">

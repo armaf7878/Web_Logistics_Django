@@ -7,30 +7,17 @@
     </div>
   </div>
 
-  <div class="card-panel">
-    <div class="card-body">
-      <form class="toolbar" role="search" method="post" action="/products/showall/">
-        {% csrf_token %}
-        <button class="btn btn-outline-primary" type="submit">Tạo đơn hàng ngay</button>
-        <div class="col-md-4">
-            <label for="inputState" class="form-label">Tài xế khả dụng</label>
-            <select id="inputState" class="form-select" name="assigned_to">
-                {% for d in deliver %}
-                <option selected  value="{{ d.id }}">{{d.name}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <input class="form-control" style="max-width:320px" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
-        <button class="btn btn-ghost" type="submit">Tìm kiếm</button>
-      </form>
-    </div>
-  </div>
-
   <div class="mt-16 card-panel">
     <div class="card-body">
       <form method="post" action="/exports/create/step-2/">
         {% csrf_token %}
         <div class="mb-16 text-right">
+            <label for="inputState" class="form-label">Tài xế khả dụng</label>
+            <select id="inputState" class="form-select" name="assigned_to">
+              {% for d in deliver %}
+              <option selected  value={{d.id}}>{{d.name}}</option>
+              {% endfor %}
+            </select>
           <button class="btn btn-brand" type="submit">Tạo đơn hàng ngay</button>
         </div>
         <table class="table table-pro mb-0">

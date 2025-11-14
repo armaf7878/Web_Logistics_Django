@@ -70,6 +70,7 @@ def create(request):
                     print("danh sách thêm" + str(deliver_list))
             deliver_list_name = []
             for deliver in deliver_list:
+                print(str(deliver))
                 doc_ref = db.collection('users').document(deliver).get()
                 item = doc_ref.to_dict()
                 item['id'] = doc_ref.id

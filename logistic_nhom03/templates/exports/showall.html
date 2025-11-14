@@ -7,19 +7,7 @@
     </div>
   </div>
 
-  <div class="card-panel">
-    <div class="card-body">
-      <form class="toolbar" role="search" method="post" action="/products/showall/">
-        {% csrf_token %}
-        <input class="form-control" style="max-width:320px" type="search" placeholder="Nhập tên sản phẩm" aria-label="Search" name="sort_name"/>
-        <div class="form-check form-switch" style="padding-top:6px;">
-          <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-          <label class="form-check-label" for="switchCheckDefault">Lọc theo hạn giao</label>
-        </div>
-        <button class="btn btn-ghost" type="submit">Tìm kiếm</button>
-      </form>
-    </div>
-  </div>
+
 
   <div class="mt-16 card-panel">
     <div class="card-body p-0">

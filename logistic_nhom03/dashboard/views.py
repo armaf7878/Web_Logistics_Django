@@ -7,10 +7,10 @@ import requests
 import json 
 db = settings.firestore_db
 def dashboard(request):
-    firebase_user = request.session.get('firebase_user')
-    user_id = request.session['firebase_user'].get('localId')
-    print(user_id)
-    if not firebase_user:
+    try: 
+        firebase_user = request.session.get('firebase_user')
+        user_id = request.session['firebase_user'].get('localId')
+    except Exception as e:
         return redirect('login')
     name = firebase_user.get('displayName')  
     role = db.collection('users').document(user_id).get().to_dict().get('role')

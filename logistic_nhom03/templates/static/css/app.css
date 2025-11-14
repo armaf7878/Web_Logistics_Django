@@ -15,10 +15,21 @@ body{background:var(--bg); color:var(--text)}
 
 /* Navbar */
 .navbar-logi{background:var(--brand)!important}
-.navbar-logi .navbar-brand,.navbar-logi .nav-link,.navbar-logi .dropdown-item{color:#000000!important}
-.navbar-logi .nav-link.active{color:#000000!important}
+.navbar-logi .navbar-brand,
+.navbar-logi .nav-item .nav-link {
+    color: #ffffff !important; 
+} 
+.navbar-logi .nav-link.active{
+    color:#e2e8f0!important;
+}
 .navbar-logi .dropdown-menu{border:1px solid var(--line)}
-.navbar-logi .dropdown-item:hover{background:#0f2e52;color:#000000}
+.navbar-logi .dropdown-item {
+    color: var(--text) !important; 
+}
+.navbar-logi .dropdown-item:hover{
+    background:#0f2e52; 
+    color:#ffffff!important;
+}
 
 /* Page header */
 .page-header{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin:8px 0 18px}

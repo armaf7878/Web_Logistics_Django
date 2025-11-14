@@ -52,7 +52,7 @@ def processing(request, export_id):
     export = db.collection('exports').document(export_id).get().to_dict()
     db.collection('exports').document(export_id).update({'status': 'delivering'})
     db.collection('delivery-tracking').document(deliver_id).set({
-        'ware_house': firestore.GeoPoint(10.796937403442016, 106.67368546418707),
+        'ware_house': firestore.GeoPoint(10.7843925, 106.6938095),
         'destination': export.get('address'), 
         'last_update': timezone.now(),
         'current_location': firestore.GeoPoint(10.796937403442016, 106.67368546418707),
