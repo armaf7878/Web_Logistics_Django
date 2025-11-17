@@ -5,9 +5,45 @@ from django.http import JsonResponse
 from .models import ProductForm
 from django.utils import timezone
 db = settings.firestore_db
+
+# === BẮT ĐẦU THÊM MỚI: HÀM KIỂM TRA VAI TRÒ ===
+# Chúng ta tạo 1 hàm dùng chung để kiểm tra cho gọn
+def check_role_deliver(request):
+    try:
+        if 'firebase_user' not in request.session:
+            return 'login' # Yêu cầu đăng nhập
+        
+        user_id = request.session['firebase_user'].get('localId')
+        user_doc = db.collection('users').document(user_id).get()
+
+        if not user_doc.exists:
+            return 'login' # Không tìm thấy user
+        
+        role = user_doc.to_dict().get('role')
+
+        if role == 'deliver':
+            return 'deliver' # Là tài xế, chuyển hướng về trang deliver
+            
+    except Exception as e:
+        return 'login' # Lỗi khác thì cứ redirect về login
+    
+    return None # Không phải tài xế, cho phép truy cập
+# === KẾT THÚC THÊM MỚI ===
+
+
 # Create your views here.
 
 def showall(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     firebase_user = request.session.get('firebase_user')
     if not firebase_user:
         return redirect('login')    
@@ -49,6 +85,16 @@ def showall(request):
             return render(request, 'products/showall.html', {'name': name})
     
 def delete(request, product_id):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     try:
         doc_ref = db.collection('products').document(product_id)
         doc =doc_ref.get()
@@ -65,6 +111,16 @@ def delete(request, product_id):
 
 
 def create(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():
@@ -83,6 +139,16 @@ def create(request):
         return render(request, 'products/create.html')
 
 def update(request, product_id):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     if request.method == 'POST':
         form = ProductForm(request.POST)
         if form.is_valid():

@@ -16,13 +16,13 @@
           </li>
         </ul>
         <div class="d-flex w align-items-center">
-          <p style="margin-right: 20px; margin-bottom: 0;">{{ name }}</p>
+          <p style="margin-right: 20px; margin-bottom: 0; color: #ffffff;">{{ name }}</p>
           <div class="nav-item dropdown">
             <a class="" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="{% static 'icon_user.webp' %}" style="width: 50px;" />
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">Quản lý tài khoản</a></li>
+              <li><a class="dropdown-item" href="{% url 'showall' %}">Quản lý tài khoản</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/accounts/logout">Đăng xuất</a></li>
             </ul>
