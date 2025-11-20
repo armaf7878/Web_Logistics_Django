@@ -9,7 +9,41 @@ from datetime import timedelta
 # Create your views here.
 db = settings.firestore_db
 
+# === BẮT ĐẦU THÊM MỚI: HÀM KIỂM TRA VAI TRÒ ===
+def check_role_deliver(request):
+    try:
+        if 'firebase_user' not in request.session:
+            return 'login' # Yêu cầu đăng nhập
+        
+        user_id = request.session['firebase_user'].get('localId')
+        user_doc = db.collection('users').document(user_id).get()
+
+        if not user_doc.exists:
+            return 'login' # Không tìm thấy user
+        
+        role = user_doc.to_dict().get('role')
+
+        if role == 'deliver':
+            return 'deliver' # Là tài xế, chuyển hướng về trang deliver
+            
+    except Exception as e:
+        return 'login' # Lỗi khác thì cứ redirect về login
+    
+    return None # Không phải tài xế, cho phép truy cập
+# === KẾT THÚC THÊM MỚI ===
+
+
 def showall(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     firebase_user = request.session['firebase_user']
     if not firebase_user:
         return redirect('login')
@@ -34,6 +68,16 @@ def showall(request):
     
 
 def create(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     if request.method == 'POST':
         form = ExportsForm(request.POST)
         if form.is_valid():
@@ -102,6 +146,16 @@ def create(request):
         return render(request, 'exports/create.html')
     
 def chooseproduct(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     if request.method == 'POST':
         product_ref = db.collection('products').get()
         products_id = []
@@ -153,6 +207,16 @@ def chooseproduct(request):
 
 
 def detail(request, export_id):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     doc_ref = db.collection('exports').document(export_id).get()
     export = doc_ref.to_dict()
     export['id'] = export_id
@@ -169,6 +233,16 @@ def detail(request, export_id):
     return render(request, 'exports/detail.html', context)
 
 def imports(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     product_ref = db.collection('products').get()
     product_list = []
     for product in product_ref:

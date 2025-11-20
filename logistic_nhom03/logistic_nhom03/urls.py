@@ -16,8 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+# === BẮT ĐẦU THÊM MỚI: Import views của app dashboard ===
+from dashboard import views as dashboard_views
+# === KẾT THÚC THÊM MỚI ===
 
 urlpatterns = [
+    # === BẮT ĐẦU THÊM MỚI: Thêm đường dẫn gốc (rỗng) trỏ đến dashboard ===
+    path('', dashboard_views.dashboard, name='root_dashboard'),
+    # === KẾT THÚC THÊM MỚI ===
+    
     path('admin/', admin.site.urls),
     path('dashboard/', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),

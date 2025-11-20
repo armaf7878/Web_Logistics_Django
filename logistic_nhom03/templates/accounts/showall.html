@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- Container -->
-  <div class="container mt-4">
+<div class="container mt-4">
     <div class="card p-3">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">Danh sách tài khoản</h4>
+        
+        <a href="{% url 'register' %}" class="btn btn-brand" style="margin-left: auto; margin-right: 1rem;">Tạo tài khoản mới</a>
+        
         <form class="d-flex" method="get">
-          <input class="form-control me-2" type="search" placeholder="Tìm theo email hoặc tên..." name="q">
+          <input class="form-control me-2" type="search" placeholder="Tìm tên tài khoản hoặc số điện thoại" name="q" value="{{ request.GET.q }}">
           <button class="btn btn-outline-primary" type="submit">Tìm kiếm</button>
         </form>
-      </div>
+        </div>
 
       <div class="table-responsive">
         <table class="table table-hover align-middle">
@@ -59,8 +61,14 @@
             </tr>
             {% empty %}
             <tr>
-              <td colspan="7" class="text-center text-muted py-3">Không có tài khoản nào trong hệ thống.</td>
-            </tr>
+              <td colspan="7" class="text-center text-muted py-3">
+                {% if request.GET.q %}
+                  Không tìm thấy tài khoản nào khớp với "{{ request.GET.q }}".
+                {% else %}
+                  Không có tài khoản nào trong hệ thống.
+                {% endif %}
+              </td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>

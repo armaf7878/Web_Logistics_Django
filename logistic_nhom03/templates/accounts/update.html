@@ -25,9 +25,8 @@
           <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Quản trị viên</option>
           <option value="staff" {% if user.role == 'staff' %}selected{% endif %}>Nhân viên kho</option>
           <option value="deliver" {% if user.role == 'deliver' %}selected{% endif %}>Tài xế giao hàng</option>
-          <option value="customer" {% if user.role == 'customer' %}selected{% endif %}>Khách hàng</option>
-        </select>
-      </div>
+          </select>
+        </div>
 
       <div class="form-check form-switch mb-3">
         <input class="form-check-input" type="checkbox" role="switch" id="active"
@@ -49,6 +48,5 @@
     </form>
   </div>
 </div>
-
 
 {% endblock %}

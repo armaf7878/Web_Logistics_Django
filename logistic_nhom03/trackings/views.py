@@ -6,6 +6,29 @@ import requests
 
 db = settings.firestore_db
 
+# === BẮT ĐẦU THÊM MỚI: HÀM KIỂM TRA VAI TRÒ ===
+def check_role_deliver(request):
+    try:
+        if 'firebase_user' not in request.session:
+            return 'login' # Yêu cầu đăng nhập
+        
+        user_id = request.session['firebase_user'].get('localId')
+        user_doc = db.collection('users').document(user_id).get()
+
+        if not user_doc.exists:
+            return 'login' # Không tìm thấy user
+        
+        role = user_doc.to_dict().get('role')
+
+        if role == 'deliver':
+            return 'deliver' # Là tài xế, chuyển hướng về trang deliver
+            
+    except Exception as e:
+        return 'login' # Lỗi khác thì cứ redirect về login
+    
+    return None # Không phải tài xế, cho phép truy cập
+# === KẾT THÚC THÊM MỚI ===
+
 def getcordinates(address, latitude = None, longitude = None):
     url = 'https://nominatim.openstreetmap.org/search'
     if address:
@@ -46,6 +69,16 @@ def getcordinates(address, latitude = None, longitude = None):
 
     
 def showall(request):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
+
     if request.session.get('firebase_user'):
         tracking_ref = db.collection('delivery-tracking').get()
         tracking = []
@@ -64,6 +97,15 @@ def showall(request):
         return redirect('login')
 
 def detail(request, tracking_id):
+    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+    redirect_to = check_role_deliver(request)
+    if redirect_to == 'login':
+        messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
+        return redirect('login')
+    if redirect_to == 'deliver':
+        messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
+        return redirect('deliver')
+    # === KẾT THÚC THÊM MỚI ===
 
     tracking = db.collection('delivery-tracking').document(tracking_id).get()
     print(tracking)
