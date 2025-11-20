@@ -1,6 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta, timezone
-
+import os
 from logistic_nhom03 import settings
 db = settings.firestore_db
 
@@ -29,23 +29,34 @@ def auto_assign_driver():
                     if user.get('role') == 'deliver':
                         deliver_list.append(doc.id)
                 print("Tài xế ban đầu" + str(deliver_list))
-
+                valid_delivers = []
                 if len(deliver_list) > 0:
                     for deliver in deliver_list:
+                        conflict = False
+                        print("Xét tài xế:" + str(deliver))
                         exports_ref = db.collection('exports').get()
                         for item in exports_ref:
                             data1 = item.to_dict()
                             if(data1.get('assigned_to') == deliver):
-                                print("Xét tài xế:" + str(deliver))
-                                if(data1['status'] != 'delivering'):
-                                    if(abs(data1['pickup_time'] - data['pickup_time']) < timedelta(days= 7)):
-                                        deliver_list.remove(deliver)
-                                        print("Xóa tài xế khỏi danh sách chờ" + str(deliver))
+                                print("Xét tài xế trong đơn:" + str(deliver))
+                                for exist in deliver_list:
+                                    if(deliver == exist):      
+                                        if(data1.get('status') == 'pending' or data1.get('status') == 'delivering'):
+                                                if(abs(data1['pickup_time'] - data['pickup_time']) < timedelta(days= 7)):
+                                                    conflict = True
+                                                    print("Xóa tài xế khỏi danh sách chờ:" + str(deliver))
+                        if not conflict:
+                            valid_delivers.append(deliver)
+                deliver_list = valid_delivers
                 if(len(deliver_list) > 0):
                     print("Danh sách tài xế cuối cùng:" + str(deliver_list))
+                    db.collection('exports').document(export.id).update({'assigned_to' : str(deliver_list[0])})
         
 
 def start_scheduler():
+    if os.environ.get('RUN_MAIN') != 'true':
+        print("Scheduler không chạy trong tiến trình reload")
+        return
     scheduler = BackgroundScheduler()
-    scheduler.add_job(auto_assign_driver, 'interval',seconds=20)
+    scheduler.add_job(auto_assign_driver, 'interval',seconds=50, max_instances=1)
     scheduler.start()

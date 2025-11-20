@@ -70,37 +70,39 @@
       })
       .catch(err => console.error("Lỗi lấy route:", err));
 
-    function sendLocation(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+    function sendLocation() {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
 
-      console.log("Current location:", lat, lon);
+          console.log("Gửi vị trí:", lat, lon);
 
-      fetch("http://127.0.0.1:8000/deliver/update_location/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{ csrf_token }}"
+          fetch("http://127.0.0.1:8000/deliver/update_location/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+              deliver_id: deliverID,
+              latitude: lat,
+              longitude: lon
+            })
+          });
         },
-        body: JSON.stringify({
-          deliver_id: deliverID,
-          latitude: lat,
-          longitude: lon
-        })
-      });
-    }
-    function error(err) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
+        function(error) {
+          console.warn("GPS error:", error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        }
+      );
     }
 
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(sendLocation, error, {
-        enableHighAccuracy: true,
-        maximumAge: 10000, 
-        timeout: 5000
-      });
-    } else {
-      alert("Trình duyệt không hỗ trợ định vị GPS");
-    }
+
+  setInterval(sendLocation, 10000);
   </script>
 {% endblock%}

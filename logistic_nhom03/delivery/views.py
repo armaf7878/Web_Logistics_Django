@@ -66,17 +66,18 @@ def processing(request, export_id):
     }   
     return redirect('deliver')
 
-def getcordinates(address, latitude=None, longitude=None):
+def getcordinates_address(address):
     url = 'https://nominatim.openstreetmap.org/search'
     if address:
+        print(address)
         params = {
             'q': address,
             'format': 'jsonv2',
             'limit': 1
         }
-        headers = {'User-Agent': 'logistic_nhom03/1.0 (contact: danh@example.com)'}
+        headers = {'User-Agent': 'logistic_nhom03/1.0 (mailto:ngothanhdanh@gmail.com)'}
         res = requests.get(url, params=params, headers=headers, timeout=10)
-        print(res)
+        print("res check", res)
         if res.status_code == 200 and res.json():
             data = res.json()[0]
             print(res.json)
@@ -84,7 +85,9 @@ def getcordinates(address, latitude=None, longitude=None):
             return lat, lon
         else:
             return JsonResponse({'error': 'Không tìm thấy vị trí'}, status=404)
-    if latitude and longitude:
+def getcordinates_geo(latitude, longitude):
+     url = 'https://nominatim.openstreetmap.org/search'
+     if latitude and longitude:
         geo = f"{latitude},{longitude}"
         params = {
             'q' : geo,
@@ -112,7 +115,7 @@ def delivering(request):
         return redirect('deliver')
     tracking = tracking.to_dict()
     print(tracking.get('destination'))
-    destination_lat, destination_lon = getcordinates(tracking.get('destination'))
+    destination_lat, destination_lon = getcordinates_address(tracking.get('destination'))
     ware_house_lat = tracking['ware_house'].latitude
     ware_house_lon = tracking['ware_house'].longitude
     current_deliver_lat = tracking['current_location'].latitude

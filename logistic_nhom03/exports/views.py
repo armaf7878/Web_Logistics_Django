@@ -68,7 +68,7 @@ def showall(request):
     
 
 def create(request):
-    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+
     redirect_to = check_role_deliver(request)
     if redirect_to == 'login':
         messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
@@ -76,7 +76,7 @@ def create(request):
     if redirect_to == 'deliver':
         messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
         return redirect('deliver')
-    # === KẾT THÚC THÊM MỚI ===
+
 
     if request.method == 'POST':
         form = ExportsForm(request.POST)
