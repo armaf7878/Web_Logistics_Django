@@ -152,7 +152,7 @@ def complete(request):
         export_id = request.POST.get('export_id')
         deliver_id = request.POST.get('deliver_id')
         print(export_id)
-        db.collection('exports').document(export_id).update({"status":"delivered"})
+        db.collection('exports').document(export_id).update({"status":"delivered", "delivered_at": timezone.now()})
 
         data = db.collection('delivery-tracking').document(deliver_id).get().to_dict()
         data['deliver_id'] = deliver_id

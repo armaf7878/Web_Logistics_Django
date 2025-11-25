@@ -9,7 +9,6 @@ from datetime import timedelta
 # Create your views here.
 db = settings.firestore_db
 
-# === BẮT ĐẦU THÊM MỚI: HÀM KIỂM TRA VAI TRÒ ===
 def check_role_deliver(request):
     try:
         if 'firebase_user' not in request.session:
@@ -19,22 +18,20 @@ def check_role_deliver(request):
         user_doc = db.collection('users').document(user_id).get()
 
         if not user_doc.exists:
-            return 'login' # Không tìm thấy user
+            return 'login' 
         
         role = user_doc.to_dict().get('role')
 
         if role == 'deliver':
-            return 'deliver' # Là tài xế, chuyển hướng về trang deliver
+            return 'deliver' 
             
     except Exception as e:
-        return 'login' # Lỗi khác thì cứ redirect về login
+        return 'login'
     
-    return None # Không phải tài xế, cho phép truy cập
-# === KẾT THÚC THÊM MỚI ===
-
+    return None
 
 def showall(request):
-    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+ 
     redirect_to = check_role_deliver(request)
     if redirect_to == 'login':
         messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
@@ -42,7 +39,7 @@ def showall(request):
     if redirect_to == 'deliver':
         messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
         return redirect('deliver')
-    # === KẾT THÚC THÊM MỚI ===
+
 
     firebase_user = request.session['firebase_user']
     if not firebase_user:
@@ -53,8 +50,12 @@ def showall(request):
         for doc in exports_ref:
             item = doc.to_dict()
             item['deadline'] = 'Còn hạn lấy'
-            if timezone.now() > item.get('pickup_time'):
+            if timezone.now() > item.get('pickup_time') :
                 item['deadline'] = 'Trễ hạn lấy'
+            if item.get('status') == 'canceled' :
+                item['deadline'] = 'Không tìm thấy tài  !'
+            if not item.get('delivery_period'):
+                item['delivery_period'] = item.get('pickup_time') + timedelta(days=7)
             item['id'] = doc.id
             exports.append(item)
         
@@ -207,7 +208,7 @@ def chooseproduct(request):
 
 
 def detail(request, export_id):
-    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+
     redirect_to = check_role_deliver(request)
     if redirect_to == 'login':
         messages.error(request, 'Bạn phải đăng nhập để xem trang này.')
@@ -215,7 +216,6 @@ def detail(request, export_id):
     if redirect_to == 'deliver':
         messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
         return redirect('deliver')
-    # === KẾT THÚC THÊM MỚI ===
 
     doc_ref = db.collection('exports').document(export_id).get()
     export = doc_ref.to_dict()
@@ -227,13 +227,15 @@ def detail(request, export_id):
         product_list[product_name] = export.get('products')[product]
 
     export['products'] = product_list
+    if not export.get('delivered_at'):
+        export['delivered_at'] = "Tài xế chưa giao tới nơi"
     context = {
         'export': export
     }
     return render(request, 'exports/detail.html', context)
 
 def imports(request):
-    # === BẮT ĐẦU THÊM MỚI: GỌI HÀM KIỂM TRA ===
+
     redirect_to = check_role_deliver(request)
     if redirect_to == 'login':
         messages.error(request, 'Bạn phải đăng nhập để thực hiện việc này.')
@@ -241,7 +243,6 @@ def imports(request):
     if redirect_to == 'deliver':
         messages.error(request, 'Tài khoản tài xế không có quyền truy cập trang này.')
         return redirect('deliver')
-    # === KẾT THÚC THÊM MỚI ===
 
     product_ref = db.collection('products').get()
     product_list = []
